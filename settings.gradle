@@ -1,0 +1,2 @@
+rootProject.name='NETRONICApp'
+include ':app'

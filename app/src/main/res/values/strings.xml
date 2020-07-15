@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">NETRONICApp</string>
+    <string name="nothing">Nothing to show</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="error_no_internet">No Internet!</string>
+    <string name="user_name">User name</string>
+    <string name="user_gender">Gender</string>
+    <string name="user_phone">Phone</string>
+    <string name="user_cell">Cellphone</string>
+    <string name="user_nat">Nat.</string>
+</resources>
