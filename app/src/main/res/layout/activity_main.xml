@@ -24,8 +24,10 @@
         <ImageButton
             android:id="@+id/main_left_btn"
             android:src="@drawable/close"
+            android:scaleType="fitXY"
             android:layout_alignParentLeft="true"
             android:background="@null"
+            android:padding="5dp"
             android:layout_width="50dp"
             android:layout_height="match_parent" />
         <View

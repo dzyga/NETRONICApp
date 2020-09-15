@@ -4,70 +4,60 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.squareup.picasso.Picasso;
 
 import net.dzyga.android.netronicapp.R;
-import net.dzyga.android.netronicapp.activity.MainActivity;
-import net.dzyga.android.netronicapp.adapter.UsersAdapter;
 import net.dzyga.android.netronicapp.model.User;
+import net.dzyga.android.netronicapp.viewmodel.UsersViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class UserFragment extends Fragment {
-    private static final String TAG = "UserFragment";
-    private TextView name, cell, phone, gender, nat;
-    private ImageView image;
-    private User user;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class UserFragment extends BaseFragment {
+    @BindView(R.id.user_name) TextView name;
+    @BindView(R.id.user_cell) TextView cell;
+    @BindView(R.id.user_phone) TextView phone;
+    @BindView(R.id.user_gender) TextView gender;
+    @BindView(R.id.user_nat) TextView nat;
+    @BindView(R.id.user_image) ImageView image;
+
+    private UsersViewModel usersViewModel;
 
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        usersViewModel = ViewModelProviders.of(this).get(UsersViewModel.class);
+        usersViewModel.init();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
-        name = (TextView) rootView.findViewById(R.id.user_name);
-        cell = (TextView) rootView.findViewById(R.id.user_cell);
-        phone = (TextView) rootView.findViewById(R.id.user_phone);
-        gender = (TextView) rootView.findViewById(R.id.user_gender);
-        nat = (TextView) rootView.findViewById(R.id.user_nat);
-        image = (ImageView) rootView.findViewById(R.id.user_image);
-
-        if (user != null){
-            name.setText(user.getName());
-            cell.setText(user.cell);
-            phone.setText(user.phone);
-            gender.setText(user.gender);
-            nat.setText(user.nat);
-            Picasso.get().load(user.getPicture()).noFade().into(image);
-        }
-
+        ButterKnife.bind(this, rootView);
+        final int position = getArguments().getInt("position", 0);
+        usersViewModel.getUsers().observe(getViewLifecycleOwner(), users -> updateUser(users, position));
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity)getActivity()).setToolbar(false);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    private void updateUser(List<User> users, int position) {
+        if (users!=null && !users.isEmpty()) {
+            User user = users.get(position);
+            if (user != null) {
+                name.setText(user.getName());
+                cell.setText(user.cell);
+                phone.setText(user.phone);
+                gender.setText(user.gender);
+                nat.setText(user.nat);
+                Picasso.get().load(user.getPicture()).noFade().into(image);
+            }
+        }
     }
 }

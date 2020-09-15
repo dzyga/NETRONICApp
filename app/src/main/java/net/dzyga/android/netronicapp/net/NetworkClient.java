@@ -18,8 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkClient {
 
-    private static final String TAG = "NetworkClient";
-    private static final int CONNECTION_TIMEOUT = 30000;
+    private final String TAG = getClass().getSimpleName();
+    private static final int CONNECTION_TIMEOUT = 10000;
     private IRestClient restApi;
     private static NetworkClient instance;
     private Response resp;
@@ -42,7 +42,6 @@ public class NetworkClient {
 
                 Request request = chain.request();
                 Response response = chain.proceed(request);
-                setResp(response);
 
                 if(response.code() == 401){
 
@@ -83,17 +82,5 @@ public class NetworkClient {
 
     public IRestClient getRestApi() {
         return restApi;
-    }
-
-    public synchronized Response getResp() {
-        return resp;
-    }
-
-    public synchronized void setResp(Response resp) {
-        this.resp = resp;
-    }
-
-    private void refreshToken(String refreshToken) {
-        
     }
 }
